@@ -14,9 +14,9 @@ pingServer();
 
 const authRoutes = require("./routers/auth");
 
+app.use("/api/auth", authRoutes);
 app.use("/api", (req, res) => {
   return res.json({ status: "success", message: "API is working good!" });
 });
-app.use("/api/auth", authRoutes);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
