@@ -3,6 +3,10 @@ const verifyGoogleToken = require("../utils/googleAuthVerify");
 const jwt = require("jsonwebtoken");
 const router = Router();
 
+router.get("/", (req, res) => {
+  return res.json({ status: "success", message: "API is working good!" });
+});
+
 router.post("/google", async (req, res) => {
   const { token } = req.body;
 
@@ -14,7 +18,7 @@ router.post("/google", async (req, res) => {
       avatar: d.picture,
     };
     const signToken = jwt.sign(data, process.env.JWT_SECRET);
-    res.json({
+    return res.json({
       status: "success",
       message: "Google login successful",
       data,
@@ -22,7 +26,9 @@ router.post("/google", async (req, res) => {
     });
   } catch (error) {
     console.error("Google Auth Error:", error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to authenticate with Google" });
+    return res
+      .status(500)
+      .json({ error: "Failed to authenticate with Google" });
   }
 });
 

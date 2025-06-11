@@ -1,7 +1,7 @@
 const pingServer = async () => {
   let SERVER_URL = "";
   try {
-    SERVER_URL = `${process.env.APP_URL}/api`;
+    SERVER_URL = `${process.env.APP_URL}/api/auth`;
     console.log(`Attempt Pinging to ${SERVER_URL}`);
     const response = await fetch(SERVER_URL);
     const data = await response.json();
