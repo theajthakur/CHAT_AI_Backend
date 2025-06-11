@@ -1,11 +1,10 @@
 const { Router } = require("express");
 const verifyGoogleToken = require("../utils/googleAuthVerify");
 const jwt = require("jsonwebtoken");
+const apiSuccessReponse = require("../utils/apiSuccessMessage");
 const router = Router();
 
-router.get("/", (req, res) => {
-  return res.json({ status: "success", message: "API is working good!" });
-});
+router.get("/", apiSuccessReponse);
 
 router.post("/google", async (req, res) => {
   const { token } = req.body;

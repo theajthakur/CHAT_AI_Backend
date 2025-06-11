@@ -13,7 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 pingServer();
 
 const authRoutes = require("./routers/auth");
+const chatRoutes = require("./routers/chat");
+const { authCheck } = require("./middlewares/auth");
 
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", authCheck, chatRoutes);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
