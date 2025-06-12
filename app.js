@@ -5,7 +5,9 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
+const connectDB = require("./utils/db");
 const port = 7778;
+
 const { pingServer } = require("./utils/pingServer");
 const cors = require("cors");
 require("dotenv").config();
@@ -17,6 +19,9 @@ app.use((req, res, next) => {
   req.io = io;
   next();
 });
+
+connectDB();
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -25,6 +30,7 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 });
+
 pingServer();
 
 const authRoutes = require("./routers/auth");
