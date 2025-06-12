@@ -107,8 +107,7 @@ router.get("/create/room", async (req, res) => {
     return res.json({
       status: "success",
       code: "available",
-      message: "Room already exists!",
-      roomId,
+      message: "Room does not exists!",
     });
   } catch (error) {
     console.log(error);
