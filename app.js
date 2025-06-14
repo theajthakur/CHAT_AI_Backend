@@ -32,9 +32,14 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("user_connected", user);
   });
 
-  socket.on("send_message", (data) => {
+  socket.on("send_message", async (data) => {
     console.log("works", data);
     sendMessage(io, socket.user, data.roomId, data.message);
+    await Chats.create({
+      user: socket.user,
+      roomId: data.roomId,
+      message: data.message,
+    });
   });
 
   socket.on("disconnect", () => {
@@ -54,6 +59,7 @@ const authRoutes = require("./routers/auth");
 const chatRoutes = require("./routers/chat");
 const { authCheck } = require("./middlewares/auth");
 const { sendMessage } = require("./utils/messageSender");
+const Chats = require("./models/Chats");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authCheck, chatRoutes);
