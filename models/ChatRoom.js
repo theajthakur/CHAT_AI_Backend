@@ -5,6 +5,10 @@ const ChatRoomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    default: "Chat Room",
+  },
   roomId: {
     type: String,
     required: true,

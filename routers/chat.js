@@ -190,7 +190,6 @@ router.post("/room/summarize", async (req, res) => {
   });
 
   let response = result.response.text();
-  response = response.replaceAll(req.user.name, "You");
   return res.json({ status: "success", message: "Retrieved", response });
 });
 
