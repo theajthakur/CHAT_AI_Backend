@@ -32,6 +32,11 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("user_connected", user);
   });
 
+  socket.on("send_message", (data) => {
+    console.log("works", data);
+    sendMessage(io, socket.user, data.roomId, data.message);
+  });
+
   socket.on("disconnect", () => {
     if (socket.user && socket.roomId) {
       console.log(
@@ -48,6 +53,7 @@ pingServer();
 const authRoutes = require("./routers/auth");
 const chatRoutes = require("./routers/chat");
 const { authCheck } = require("./middlewares/auth");
+const { sendMessage } = require("./utils/messageSender");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authCheck, chatRoutes);
