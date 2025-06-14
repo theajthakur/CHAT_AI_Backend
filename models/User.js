@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ChatRoomSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -9,7 +9,7 @@ const ChatRoomSchema = new mongoose.Schema({
     type: String,
     default: "Chat Room",
   },
-  roomId: {
+  avatar: {
     type: String,
     required: true,
   },
@@ -19,5 +19,5 @@ const ChatRoomSchema = new mongoose.Schema({
   },
 });
 
-const ChatRoom = mongoose.model("ChatRoom", ChatRoomSchema);
-module.exports = ChatRoom;
+const User = mongoose.model("User", UserSchema);
+module.exports = User;

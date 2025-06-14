@@ -23,11 +23,23 @@ app.use((req, res, next) => {
 connectDB();
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on("join_room", (roomId) => {
+  socket.on("join_room", ({ roomId, user }) => {
+    socket.user = user;
+    socket.roomId = roomId;
     socket.join(roomId);
-    console.log(`User ${socket.id} joined room ${roomId}`);
+    console.log(`User ${user.name} joined room ${roomId}`);
+
+    io.to(roomId).emit("user_connected", user);
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.user && socket.roomId) {
+      console.log(
+        `User ${socket.user.name} disconnected from room ${socket.roomId}`
+      );
+
+      io.to(socket.roomId).emit("user_disconnected", socket.user);
+    }
   });
 });
 

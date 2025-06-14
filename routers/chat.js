@@ -33,7 +33,7 @@ router.post("/send", (req, res) => {
     }),
   });
 
-  console.log(`Message sent to room ${roomId} by user ${user.id}`);
+  console.log(`Message sent to room ${roomId} by user ${user.name}`);
 
   return res.status(200).json({
     status: "success",
