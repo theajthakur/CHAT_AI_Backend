@@ -4,9 +4,27 @@ const apiSuccessReponse = require("../utils/apiSuccessMessage");
 const { v4: uuidv4 } = require("uuid");
 const ChatRoom = require("../models/ChatRoom");
 const User = require("../models/User");
+const Chats = require("../models/Chats");
 const router = Router();
 
 router.get("/", apiSuccessReponse);
+
+router.post("/fetch/all", async (req, res) => {
+  try {
+    const { roomId } = req.body;
+    if (!roomId)
+      return res.json({ status: "error", message: "No RoomID Found!" });
+    const chats = await Chats.find({ roomId });
+    return res.json({
+      status: "success",
+      message: "Chat Fetched successfully!",
+      chats,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ status: "error", message: "Error fetching chats!" });
+  }
+});
 
 const checkRoomExistByEmail = async (email) => {
   const roomExist = await ChatRoom.findOne({ email });
