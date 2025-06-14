@@ -21,7 +21,6 @@ async function verifyGoogleToken(idToken) {
     { upsert: true }
   );
 
-  console.log(user);
   return payload;
 }
 

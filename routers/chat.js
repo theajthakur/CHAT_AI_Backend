@@ -3,6 +3,7 @@ const { Router } = require("express");
 const apiSuccessReponse = require("../utils/apiSuccessMessage");
 const { v4: uuidv4 } = require("uuid");
 const ChatRoom = require("../models/ChatRoom");
+const User = require("../models/User");
 const router = Router();
 
 router.get("/", apiSuccessReponse);
@@ -49,7 +50,9 @@ const checkRoomExistByEmail = async (email) => {
 
 const checkRoomExistById = async (roomId) => {
   const roomExist = await ChatRoom.findOne({ roomId });
-  if (roomExist) return roomExist;
+  const user = await User.findOne({ email: roomExist.email });
+  console.log(roomExist, user);
+  if (roomExist) return { ...roomExist.toObject(), user };
   return false;
 };
 
@@ -117,6 +120,7 @@ router.get("/create/room", async (req, res) => {
 });
 
 router.post("/create/room", async (req, res) => {
+  const { roomName } = req.body;
   try {
     const email = req.user?.email;
     if (!email)
@@ -132,7 +136,7 @@ router.post("/create/room", async (req, res) => {
       });
     const roomId = uuidv4();
 
-    await ChatRoom.create({ email, roomId });
+    await ChatRoom.create({ name: roomName, email, roomId });
     return res.json({
       status: "success",
       code: "created",
@@ -185,7 +189,8 @@ router.post("/room/summarize", async (req, res) => {
     ],
   });
 
-  const response = result.response.text();
+  let response = result.response.text();
+  response = response.replaceAll(req.user.name, "You");
   return res.json({ status: "success", message: "Retrieved", response });
 });
 
