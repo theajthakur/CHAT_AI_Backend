@@ -7,7 +7,7 @@ A real-time chat room web application built with **MERN stack**, **Socket.IO**, 
 ## 🚀 Features
 
 - 🔐 **User Authentication** (JWT-based, Google login ready)
-- 💬 **Live Messaging** with WebSocket (\`Socket.IO\`)
+- 💬 **Live Messaging** with WebSocket (`Socket.IO`)
 - 🧠 **AI-Powered Chat Summarizer** using Gemini API
 - 🏷️ **Chat Mood Detection** with gradient color themes
 - 🏠 **Room Management** – Create, fetch, delete rooms
@@ -23,15 +23,15 @@ A real-time chat room web application built with **MERN stack**, **Socket.IO**, 
 
 Each chat room session can be summarized by Google Gemini 2.0:
 
-\`\`\`json
+```json
 {
-"chatMood": "joyful",
-"moodColourCode": ["#fceabb", "#f8b500"],
-"summary": "The participants had a fun and energetic conversation filled with jokes and casual updates."
+  "chatMood": "joyful",
+  "moodColourCode": ["#fceabb", "#f8b500"],
+  "summary": "The participants had a fun and energetic conversation filled with jokes and casual updates."
 }
-\`\`\`
+```
 
-Uses Gemini's \`gemini-2.0-flash\` model to generate:
+Uses Gemini's `gemini-2.0-flash` model to generate:
 
 - A mood label (joyful, flirty, confused, etc.)
 - A matching two-color HEX gradient
@@ -53,20 +53,20 @@ Uses Gemini's \`gemini-2.0-flash\` model to generate:
 
 ## 📦 API Highlights
 
-| Endpoint              | Method | Description                      |
-| --------------------- | ------ | -------------------------------- |
-| \`/api/chat/create\`  | POST   | Create a new chat room           |
-| \`/api/chat/fetch\`   | POST   | Get room details                 |
-| \`/api/chat/chats\`   | POST   | Fetch all chats of a room        |
-| \`/api/chat/delete\`  | POST   | Delete a room (owner only)       |
-| \`/api/chat/view\`    | GET    | Check if user already has a room |
-| \`/api/chat/summary\` | POST   | Generate AI summary from chats   |
+| Endpoint            | Method | Description                      |
+| ------------------- | ------ | -------------------------------- |
+| `/api/chat/create`  | POST   | Create a new chat room           |
+| `/api/chat/fetch`   | POST   | Get room details                 |
+| `/api/chat/chats`   | POST   | Fetch all chats of a room        |
+| `/api/chat/delete`  | POST   | Delete a room (owner only)       |
+| `/api/chat/view`    | GET    | Check if user already has a room |
+| `/api/chat/summary` | POST   | Generate AI summary from chats   |
 
 ---
 
 ## 🧪 How to Run
 
-\`\`\`bash
+```bash
 
 # 1. Clone this repo
 
@@ -86,17 +86,17 @@ touch .env
 # 4. Start the server
 
 npm run dev
-\`\`\`
+```
 
 ---
 
-## 🔒 Environment Variables (\`.env\`)
+## 🔒 Environment Variables (`.env`)
 
-\`\`\`env
+```env
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_google_gemini_api_key
-\`\`\`
+```
 
 ---
 
@@ -121,7 +121,7 @@ GEMINI_API_KEY=your_google_gemini_api_key
 
 **Vijay Thakur**  
 🚀 Freelance Full-Stack Developer | MERN Expert  
-🔗 [LinkedIn](https://www.linkedin.com/) | [Portfolio](https://your-portfolio.com)
+🔗 [LinkedIn](https://www.linkedin.com/in/theajthakur) | [Portfolio](https://theajthakur.vercel.app)
 
 ---
 
