@@ -3,10 +3,7 @@ const generateAiSummary = async (req, res) => {
   const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const { data } = req.body;
   const query = data.map((d) => `${d.name}: ${d.message}`).join("\n");
-  console.log(query);
-
   const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" }); // or "gemini-pro"
-
   const result = await model.generateContent({
     contents: [
       {
@@ -38,7 +35,6 @@ const generateAiSummary = async (req, res) => {
       },
     ],
   });
-
   let response = result.response.text();
   return res.json({ status: "success", message: "Retrieved", response });
 };
