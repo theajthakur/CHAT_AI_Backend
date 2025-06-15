@@ -111,12 +111,6 @@ GEMINI_API_KEY=your_google_gemini_api_key
 
 ---
 
-## 📸 Preview
-
-> _(Add a screen recording or image link of your working chat app UI here for better impact)_
-
----
-
 ## 🙋‍♂️ Author
 
 **Vijay Thakur**  
