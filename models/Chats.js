@@ -16,6 +16,7 @@ const ChatsSchema = new mongoose.Schema({
   roomId: {
     type: String,
     required: true,
+    index: true,
   },
   message: {
     type: String,

@@ -1,180 +1,22 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { Router } = require("express");
+const { generateAiSummary } = require("../controllers/AI");
 const apiSuccessReponse = require("../utils/apiSuccessMessage");
-const { v4: uuidv4 } = require("uuid");
-const ChatRoom = require("../models/ChatRoom");
-const User = require("../models/User");
-const Chats = require("../models/Chats");
+const {
+  fetchAllChats,
+  fetchRoomDetail,
+  handleRoomDelete,
+  handleCreateRoom,
+  viewRoomDetail,
+} = require("../controllers/chat");
+
+const { Router } = require("express");
 const router = Router();
 
 router.get("/", apiSuccessReponse);
-
-router.post("/fetch/all", async (req, res) => {
-  try {
-    const { roomId } = req.body;
-    if (!roomId)
-      return res.json({ status: "error", message: "No RoomID Found!" });
-    const chats = await Chats.find({ roomId });
-    return res.json({
-      status: "success",
-      message: "Chat Fetched successfully!",
-      chats,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.json({ status: "error", message: "Error fetching chats!" });
-  }
-});
-
-const checkRoomExistByEmail = async (email) => {
-  const roomExist = await ChatRoom.findOne({ email });
-  if (roomExist) return roomExist;
-  return false;
-};
-
-const checkRoomExistById = async (roomId) => {
-  const roomExist = await ChatRoom.findOne({ roomId });
-  const user = await User.findOne({ email: roomExist.email });
-  console.log(roomExist, user);
-  if (roomExist) return { ...roomExist.toObject(), user };
-  return false;
-};
-
-router.post("/delete/room", async (req, res) => {});
-
-router.post("/room/detail", async (req, res) => {
-  const { roomId } = req.body;
-  if (!roomId) return res.json({ status: "error", message: "Room not exists" });
-  try {
-    const roomexist = await checkRoomExistById(roomId);
-    if (roomexist)
-      return res.json({
-        status: "success",
-        message: "Room already exists!",
-        data: roomexist,
-      });
-
-    return res.json({
-      status: "error",
-      message: "Room does not exists!",
-    });
-  } catch (error) {
-    console.log(error);
-    return res.json({ status: "error", message: "Something went wrong!" });
-  }
-});
-
-router.post("/room/delete", async (req, res) => {
-  const { roomId } = req.body;
-  const roomdata = await checkRoomExistById(roomId);
-
-  if (!roomdata)
-    return res.json({ status: "error", message: "Room does not exists!" });
-
-  if (roomdata?.email != req.user?.email)
-    return res.json({
-      status: "error",
-      message: "You have no permission to delete this room!",
-    });
-
-  await ChatRoom.deleteOne({ roomId });
-  return res.json({ status: "success", message: "Room deleted successfully" });
-});
-
-router.get("/create/room", async (req, res) => {
-  try {
-    const roomexist = await checkRoomExistByEmail(req.user.email);
-    if (roomexist)
-      return res.json({
-        status: "success",
-        code: "roomExist",
-        message: "Room already exists!",
-        roomId: roomexist.roomId,
-      });
-
-    return res.json({
-      status: "success",
-      code: "available",
-      message: "Room does not exists!",
-    });
-  } catch (error) {
-    console.log(error);
-    return res.json({ status: "error", message: "Something went wrong!" });
-  }
-});
-
-router.post("/create/room", async (req, res) => {
-  const { roomName } = req.body;
-  try {
-    const email = req.user?.email;
-    if (!email)
-      return res.json({ status: "error", message: "Unauthorised Access!" });
-
-    const roomexist = await checkRoomExistByEmail(email);
-    if (roomexist)
-      return res.json({
-        status: "success",
-        code: "roomExist",
-        message: "Room already exists!",
-        roomId: roomexist.roomId,
-      });
-    const roomId = uuidv4();
-
-    await ChatRoom.create({ name: roomName, email, roomId });
-    return res.json({
-      status: "success",
-      code: "created",
-      message: "Room created successfully",
-      roomId,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.json({ status: "error", message: "Something went wrong!" });
-  }
-});
-
-router.post("/room/summarize", async (req, res) => {
-  const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const { data } = req.body;
-  const query = data.map((d) => `${d.name}: ${d.message}`).join("\n");
-  console.log(query);
-
-  const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" }); // or "gemini-pro"
-
-  const result = await model.generateContent({
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: `You are an AI chat summarizer
-                  Your job is to:
-                  1. Analyze the provided chat messages.
-                  2. Determine the overall mood of the conversation (e.g., joyful, sad, angry, casual, flirty, confused, professional, etc.).
-                  3. Based on the mood, provide light colours, fitting 2-color HEX gradient in "moodColourCode".
-                  4. Give a short, clear summary of the conversation (max 3-4 sentences).
-
-                  Respond only in the following JSON format:
-
-                  {
-                    "chatMood": "brief mood label",
-                    "moodColourCode": ["#hexcode1", "#hexcode2"],
-                    "summary": "Short summary of the conversation"
-                  }
-
-                  Now, here is the chat conversation:
-                  ---
-                  ${query}
-                  ---
-                  `,
-          },
-        ],
-      },
-    ],
-  });
-
-  let response = result.response.text();
-  return res.json({ status: "success", message: "Retrieved", response });
-});
+router.post("/fetch/all", fetchAllChats);
+router.post("/room/detail", fetchRoomDetail);
+router.post("/room/delete", handleRoomDelete);
+router.get("/create/room", viewRoomDetail);
+router.post("/create/room", handleCreateRoom);
+router.post("/room/summarize", generateAiSummary);
 
 module.exports = router;

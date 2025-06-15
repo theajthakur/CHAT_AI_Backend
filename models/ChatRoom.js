@@ -12,6 +12,7 @@ const ChatRoomSchema = new mongoose.Schema({
   roomId: {
     type: String,
     required: true,
+    index: true,
   },
   createdAt: {
     type: Date,

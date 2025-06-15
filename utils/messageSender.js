@@ -8,8 +8,6 @@ const sendMessage = (io, user, roomId, message) => {
       hour12: true,
     }),
   });
-
-  console.log(`Message sent to room ${roomId} by user ${user.name}`);
 };
 
 module.exports = { sendMessage };

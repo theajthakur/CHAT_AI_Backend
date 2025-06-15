@@ -1,4 +1,3 @@
-const axios = require("axios");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -7,6 +6,7 @@ const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 const connectDB = require("./utils/db");
 const port = 7778;
+const { socketConnect } = require("./utils/sockets");
 
 const { pingServer } = require("./utils/pingServer");
 const cors = require("cors");
@@ -21,45 +21,12 @@ app.use((req, res, next) => {
 });
 
 connectDB();
-
-io.on("connection", (socket) => {
-  socket.on("join_room", ({ roomId, user }) => {
-    socket.user = user;
-    socket.roomId = roomId;
-    socket.join(roomId);
-    console.log(`User ${user.name} joined room ${roomId}`);
-
-    io.to(roomId).emit("user_connected", user);
-  });
-
-  socket.on("send_message", async (data) => {
-    console.log("works", data);
-    sendMessage(io, socket.user, data.roomId, data.message);
-    await Chats.create({
-      user: socket.user,
-      roomId: data.roomId,
-      message: data.message,
-    });
-  });
-
-  socket.on("disconnect", () => {
-    if (socket.user && socket.roomId) {
-      console.log(
-        `User ${socket.user.name} disconnected from room ${socket.roomId}`
-      );
-
-      io.to(socket.roomId).emit("user_disconnected", socket.user);
-    }
-  });
-});
-
+socketConnect(io);
 pingServer();
 
 const authRoutes = require("./routers/auth");
 const chatRoutes = require("./routers/chat");
 const { authCheck } = require("./middlewares/auth");
-const { sendMessage } = require("./utils/messageSender");
-const Chats = require("./models/Chats");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authCheck, chatRoutes);
