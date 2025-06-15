@@ -31,7 +31,8 @@ const fetchAllChats = async (req, res) => {
     const { roomId } = req.body;
     if (!roomId)
       return res.json({ status: "error", message: "No RoomID Found!" });
-    const chats = await Chats.find({ roomId });
+    const chats = await Chats.find({ roomId }).sort({ createdAt: 1 });
+
     return res.json({
       status: "success",
       message: "Chat Fetched successfully!",
