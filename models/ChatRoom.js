@@ -14,6 +14,14 @@ const ChatRoomSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  roomType: {
+    type: String,
+    enum: ["individual", "group"],
+    default: "group",
+  },
+  participant: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

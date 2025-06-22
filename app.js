@@ -29,6 +29,14 @@ const chatRoutes = require("./routers/chat");
 const featureRoutes = require("./routers/feature");
 const { authCheck } = require("./middlewares/auth");
 
+app.get("/get-google-img", async (req, res) => {
+  const url = req.query.url;
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  res.set("Content-Type", "image/jpeg");
+  res.send(Buffer.from(buffer));
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authCheck, chatRoutes);
 app.use("/api/feature", authCheck, featureRoutes);

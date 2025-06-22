@@ -1,3 +1,4 @@
+const Friends = require("../models/Friends");
 const User = require("../models/User");
 
 const handleUserSearch = async (req, res) => {
@@ -31,4 +32,37 @@ const handleUserSearch = async (req, res) => {
   }
 };
 
-module.exports = { handleUserSearch };
+const listAllFriends = async (req, res) => {
+  try {
+    // Ensure user is authenticated
+    const userEmail = req?.user?.email;
+    if (!userEmail) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized access. User email is missing.",
+      });
+    }
+
+    // Fetch friends where the user is the initiator
+    const friends = await Friends.find({ initiator: userEmail });
+
+    return res.status(200).json({
+      status: "success",
+      message: `${friends.length} friend${
+        friends.length === 1 ? "" : "s"
+      } fetched!`,
+      data: friends,
+    });
+  } catch (error) {
+    console.error("Error in listAllFriends:", error);
+
+    // Handle known error types if needed (like DB validation, network, etc.)
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to fetch friends. Please try again later.",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+};
+
+module.exports = { handleUserSearch, listAllFriends };
