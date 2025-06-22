@@ -3,7 +3,7 @@ const generateAiSummary = async (req, res) => {
   const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const { data } = req.body;
   const query = data.map((d) => `${d.name}: ${d.message}`).join("\n");
-  const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" }); // or "gemini-pro"
+  const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
   const result = await model.generateContent({
     contents: [
       {

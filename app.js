@@ -26,10 +26,12 @@ pingServer();
 
 const authRoutes = require("./routers/auth");
 const chatRoutes = require("./routers/chat");
+const featureRoutes = require("./routers/feature");
 const { authCheck } = require("./middlewares/auth");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authCheck, chatRoutes);
+app.use("/api/feature", authCheck, featureRoutes);
 
 server.listen(port, () =>
   console.log(`Server with Socket.IO listening on port ${port}!`)

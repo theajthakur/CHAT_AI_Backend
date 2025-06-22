@@ -4,9 +4,11 @@ const authCheck = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res
-        .status(401)
-        .send({ error: "Authentication token missing or malformed" });
+      return res.status(401).send({
+        status: "error",
+        message: "Authentication token missing or malformed",
+        data: authHeader,
+      });
     }
 
     const token = authHeader.replace("Bearer ", "").trim();
